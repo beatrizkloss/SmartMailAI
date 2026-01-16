@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartMail AI</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='img/favicon.jpg') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="header-principal">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fa-solid fa-robot"></i> SmartMail <span>AI</span>
+        </div>
+        <h1>Otimize seu Atendimento</h1>
+        <p>
+          Inteligência artificial que lê, classifica e sugere respostas para
+          seus e-mails corporativos em segundos.
+        </p>
+
+        <div class="steps-preview">
+          <div class="step">
+            <i class="fa-solid fa-file-arrow-up"></i>
+            <span>1. Envie o Email</span>
+          </div>
+          <div class="step-arrow">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+          <div class="step">
+            <i class="fa-solid fa-brain"></i>
+            <span>2. IA Analisa</span>
+          </div>
+          <div class="step-arrow">
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+          <div class="step">
+            <i class="fa-solid fa-check-double"></i>
+            <span>3. Resposta Pronta</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="card-container" id="box-principal">
+        <form
+          method="POST"
+          action="/"
+          enctype="multipart/form-data"
+          onsubmit="return validarEnvio()"
+        >
+          <div class="upload-area" id="drop-zone">
+            <div class="icon-circle">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+            </div>
+            <h3>Arraste seu PDF aqui</h3>
+            <p>ou clique para selecionar do computador</p>
+            <input
+              type="file"
+              name="email_arquivo"
+              id="file-input"
+              accept=".pdf,.txt"
+              hidden
+            />
+            <span id="file-name"></span>
+          </div>
+
+          <div class="divider">
+            <span>OU COLE O TEXTO</span>
+          </div>
+
+          <textarea
+            id="email_texto"
+            name="email_texto"
+            rows="4"
+            placeholder="Cole o conteúdo do email aqui..."
+          >
+{{ email_anterior if email_anterior else '' }}</textarea
+          >
+
+          <button type="submit" class="btn-processar" id="btn-enviar">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Analisar com IA
+          </button>
+        </form>
+
+        <div id="loading" class="loading-box" style="display: none">
+          <div class="spinner"></div>
+          <p>A Inteligência Artificial está processando...</p>
+        </div>
+
+        {% if categoria %}
+        <div class="resultado-box">
+          <div class="resultado-header">
+            <h3><i class="fa-solid fa-chart-pie"></i> Resultado da Análise</h3>
+            <span
+              class="tag {{ 'produtivo' if 'Produtivo' in categoria else 'improdutivo' }}"
+            >
+              {{ categoria }}
+            </span>
+          </div>
+
+          <div class="resposta-container">
+            <div class="resposta-tools">
+              <span class="label">Sugestão de Resposta:</span>
+              <button class="btn-copy" onclick="copiarTexto()">
+                <i class="fa-regular fa-copy"></i> Copiar
+              </button>
+            </div>
+            <p id="texto-resposta">{{ resposta }}</p>
+          </div>
+
+          <div class="actions">
+            <a href="/?limpar=true" class="btn-reiniciar">
+              <i class="fa-solid fa-rotate-right"></i> Nova Análise
+            </a>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </main>
+
+    <footer>
+      <p>Desenvolvido por Beatriz Kloss &copy; 2026</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>
