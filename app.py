@@ -1,6 +1,6 @@
 import os
 import re
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from google import genai  
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
@@ -15,6 +15,7 @@ client = genai.Client(api_key=chave_api)
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
+
 @app.errorhandler(413)
 def arquivo_muito_grande(error):
     return render_template('index.html', 
@@ -49,6 +50,11 @@ def ler_pdf(arquivo):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+
+    # se a url tiver ?limpar=true, redireciona para a página inicial 
+    if request.args.get('limpar'):
+        return redirect(url_for('index'))
+
     categoria = None
     resposta_sugerida = None
     email_original = None
@@ -74,7 +80,7 @@ def index():
             Analise o seguinte email recebido: "{email_processado}"
             
             Tarefas:
-            1. Classifique como "Produtivo" ou "Improdutivo".
+            1. Classifique como "Produtivo" (Trabalho real, Projetos, Prazos, Clientes atuais ou Agendamentos.) ou "Improdutivo" (Propaganda, Vendas não solicitadas, Spam, Newsletter ou Golpes.).
             2. Escreva uma resposta sugerida curta e profissional.
             
             REGRAS DE RESPOSTA:

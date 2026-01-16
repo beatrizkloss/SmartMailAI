@@ -115,14 +115,13 @@ function validarEnvio() {
 
 // --- Auto-Scroll para Resultados ---
 function handleAutoScroll() {
-  // delay para garantir renderização completa
   setTimeout(function () {
-    const card = document.getElementById("box-principal");
+    // procura se existe uma resposta na tela
     const resultado = document.querySelector(".resultado-box");
-    const urlParams = new URLSearchParams(window.location.search);
+    const card = document.getElementById("box-principal");
 
-    // rola se houver resultado ou se for um reset (param ?limpar=true)
-    if ((resultado || urlParams.has("limpar")) && card) {
+    // se tiver resposta e o card principal, rola até ele
+    if (resultado && card) {
       card.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, 100);
